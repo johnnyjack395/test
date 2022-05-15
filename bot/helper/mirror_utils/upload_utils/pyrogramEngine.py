@@ -29,7 +29,7 @@ class TgUploader:
         self.__is_cancelled = False
         self.__as_doc = AS_DOCUMENT
         self.__thumb = f"Thumbnails/{listener.message.from_user.id}.jpg"
-        self.__sent_msg = app.get_messages(self.chat_id, self.message_id, self.__listener.uid)
+        self.__sent_msg = app.get_messages(self.__listener.message.chat.id, self.__listener.uid)
         self.__msgs_dict = {}
         self.__corrupted = 0
         self.__resource_lock = RLock()
