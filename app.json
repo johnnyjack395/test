@@ -1,5 +1,5 @@
 {
-    "name": "slam-mirrorbot ",
+    "name": "maal-wala ",
     "description": "A Telegram bot for all your mirror needs",
     "logo": "https://telegra.ph/file/6507910fd06d18dfaba82.jpg",
     "keywords": [
@@ -7,7 +7,7 @@
       "telegram",
       "python"
     ],
-    "repository": "https://github.com/breakdowns/slam-mirrorbot",
+    "repository": "https://github.com/Jitendra7007/maal",
     "website": "https://t.me/SlamMirrorSupport",
     "success_url": "https://github.com/breakdowns/slam-mirrorbot/blob/master/README.md",
     "stack": "container",
@@ -26,12 +26,12 @@
       },
       "DOWNLOAD_DIR": {
         "description": "The path to the local folder where the downloads should be downloaded to.",
-        "value": "/home/slam/mirror-bot/downloads",
+        "value": "/usr/src/app/downloads",
         "required": false
       },
       "DOWNLOAD_STATUS_UPDATE_INTERVAL": {
         "description": "A short interval of time in seconds after which the Mirror progress message is updated. (I recommend to keep it 5 seconds at least).",
-        "value": "5",
+        "value": "8",
         "required":false
       },
       "OWNER_ID": {
@@ -40,10 +40,12 @@
       },
       "AUTO_DELETE_MESSAGE_DURATION": {
         "description": "Interval of time (in seconds), after which the bot deletes it's message (and command message) which is expected to be viewed instantly. Note: Set to -1 to never automatically delete messages.",
+        "value": "-1",
         "required": true
       },
       "IS_TEAM_DRIVE": {
         "description": "Set to 'True' if GDRIVE_FOLDER_ID is from a Team Drive else False or Leave it empty.",
+         "value": "True",
         "required": false
       },
       "USE_SERVICE_ACCOUNTS": {
@@ -66,12 +68,8 @@
         "description": "This is to authenticate to your telegram account for downloading Telegram files. You can get this from https://my.telegram.org.",
         "required": true
       },
-      "HEROKU_API_KEY": {
-        "description": "Your Heroku API key, get it from https://dashboard.heroku.com/account.",
-        "required": true
-      },
-      "HEROKU_APP_NAME": {
-        "description": "Add the Heroku app name here.",
+      "BASE_URL_OF_BOT": {
+        "description": "Add the Heroku https://appname.herokuapp.com name here.",
         "required": true
       },
       "UPTOBOX_TOKEN": {
@@ -94,51 +92,48 @@
         "description": "If you want to remove mega.nz mirror support, set it to True.",
         "required": false
       },
-      "ENABLE_FILESIZE_LIMIT": {
+      "TORRENT_DIRECT_LIMIT": {
         "description": "Set it to True if you want to use MAX_TORRENT_SIZE.",
-        "value": "False",
+        "value": "250",
         "required": false
       },
-      "MAX_TORRENT_SIZE": {
-        "description": "To limit the torrent mirror size, Fill The amount you want to limit, examples: if you fill 15 it will limit 15gb.",
-        "value": "15",
-        "required": false
-      },
-      "STOP_DUPLICATE_MIRROR": {
+      "CLONE_LIMIT": {
         "description": "If this field is set to True, bot will check file in drive, if it is present in drive, downloading will be stopped.",
+         "value": "750",
         "required": false
       },
-      "SHORTENER": {
+      "DATABASE_URL": {
         "description": "If you want to use shortener in Gdrive and index link.",
+        "value": "postgres://wyudilrairqfbk:d2dae8480ef0e934b2d00a6319a0caa756e2d534bf2e0d56fc18ac09cab72f09@ec2-52-48-159-67.eu-west-1.compute.amazonaws.com:5432/dfdhct62km9r55",
         "required": false
       },
-      "SHORTENER_API": {
-        "description": "Fill your shortener api key if you are using shortener.",
+      "CRYPT": {
+        "description": "Fill your gdtot craft key if you are using shortener.",
         "required": false
       },
       "BUTTON_THREE_NAME": {
         "description": "Extra buttons (optional).",
         "required": false
       },
-      "BUTTON_THREE_URL": {
-        "description": "Fill your URL if you are using extra buttons.",
+      "QB_SEED": {
+        "description": "Fill your false if you are using not seed torrent.",
+        "value": "False",
         "required": false
       },
-      "BUTTON_FOUR_NAME": {
+      "SERVER_PORT": {
         "description": "Extra buttons (optional).",
+
+        "value": "80",
         "required": false
       },
-      "BUTTON_FOUR_URL": {
-        "description": "Fill your URL if you are using extra buttons.",
+      "SUDO_USERS": {
+        "description": "Fill your sudo if you are using more admins.",
         "required": false
       },
-      "BUTTON_FIVE_NAME": {
-        "description": "Extra buttons (optional).",
+      "USE_SERVICE_ACCOUNTS": {
+        "description": "Extra SA (optional).",
         "required": false
       },
-      "BUTTON_FIVE_URL": {
-        "description": "Fill your URL if you are using extra buttons.",
-        "required": false
       }
     }
 }
