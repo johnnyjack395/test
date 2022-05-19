@@ -1,11 +1,18 @@
 import logging
 
-from os import remove as osremove, walk, path as ospath, rename as osrename, \
+import json
+import uuid
+import shlex
+import traceback
+from os import remove as osremove, \
+    walk, path as ospath, rename as osrename, \
+    makedirs, \
     environ
 from time import time, sleep
 from pyrogram.errors import FloodWait, RPCError
 from PIL import Image
 from threading import RLock
+from subprocess import run as srun, check_output
 
 from bot import app, DOWNLOAD_DIR, AS_DOCUMENT, AS_DOC_USERS, AS_MEDIA_USERS, CUSTOM_FILENAME
 from bot.helper.ext_utils.fs_utils import take_ss, get_media_info, get_video_resolution, get_path_size
@@ -19,6 +26,42 @@ AUDIO_SUFFIXES = ("MP3", "M4A", "M4B", "FLAC", "WAV", "AIF", "OGG", "AAC", "DTS"
 IMAGE_SUFFIXES = ("JPG", "JPX", "PNG", "WEBP", "CR2", "TIF", "BMP", "JXR", "PSD", "ICO", "HEIC", "JPEG")
 
 
+def change_metadata(the_media: str):
+    file_name = the_media.rsplit("/", 1)[-1]
+    title = "Telegram @Madxmovies"
+    video_title = "Telegram @Madxmovies"
+    audio_title = "Telegram @Madxmovies"
+    subtitle_title = "Telegram @Madxmovies"
+
+    try:
+        result = srun(shlex.split(f"ffprobe -hide_banner -loglevel error -show_streams -print_format  json -show_format {shlex.quote(the_media)}"), capture_output=True)
+        details = json.loads(result.stdout.decode('utf-8'))
+        middle_cmd = f"ffmpeg -i {shlex.quote(the_media)} -c copy -map 0"
+        if title:
+            middle_cmd += f' -metadata title="{title}"'
+        for stream in details["streams"]:
+            if (stream["codec_type"] == "video") and video_title:
+                middle_cmd += f' -metadata:s:{stream["index"]} title="{video_title}"'
+            elif (stream["codec_type"] == "audio") and audio_title:
+                middle_cmd += f' -metadata:s:{stream["index"]} title="{audio_title}"'
+            elif (stream["codec_type"] == "subtitle") and subtitle_title:
+                middle_cmd += f' -metadata:s:{stream["index"]} title="{subtitle_title}"'
+        dl_loc = "./downloads/" + uuid.uuid4().hex + "/"
+        if not ospath.isdir(dl_loc):
+            makedirs(dl_loc)
+        new_file_path = dl_loc + file_name
+        middle_cmd += f" {shlex.quote(new_file_path)}"
+        srun(shlex.split(middle_cmd))
+        if not ospath.isfile(new_file_path):
+            LOGGER.error("Failed to generate new metadata video ...")
+            return ""
+        return new_file_path
+    except Exception as err:
+        LOGGER.error(err)
+        traceback.print_exc()
+        return ""
+
+
 class TgUploader:
 
     def __init__(self, name=None, listener=None):
@@ -30,7 +73,7 @@ class TgUploader:
         self.__is_cancelled = False
         self.__as_doc = AS_DOCUMENT
         self.__thumb = f"Thumbnails/{listener.message.from_user.id}.jpg"
-        self.__sent_msg = app.get_messages(self.__listener.message.chat.id, self.__listener.uid)
+        self.__sent_msg = ''
         self.__msgs_dict = {}
         self.__corrupted = 0
         self.__resource_lock = RLock()
@@ -63,14 +106,18 @@ class TgUploader:
         self.__listener.onUploadComplete(None, size, self.__msgs_dict, None, self.__corrupted, self.name)
 
     def __upload_file(self, up_path, file_, dirpath):
+        if self.__sent_msg == '':
+            self.__sent_msg = app.get_messages(self.__listener.message.chat.id, self.__listener.uid)
+        else:
+            self.__sent_msg = app.get_messages(self.__sent_msg.chat.id, self.__sent_msg.message_id)
         if CUSTOM_FILENAME is not None:
-            cap_mono = f"{CUSTOM_FILENAME} <code>{file_}</code>"
+            cap_mono = f"{CUSTOM_FILENAME} <strong>{file_}</strong>"
             file_ = f"{CUSTOM_FILENAME} {file_}"
             new_path = ospath.join(dirpath, file_)
             osrename(up_path, new_path)
             up_path = new_path
         else:
-            cap_mono = f"<code>{file_}</code>"
+            cap_mono = f"<strong>{file_}</strong>"
         notMedia = False
         thumb = self.__thumb
         try:
@@ -94,6 +141,11 @@ class TgUploader:
                         new_path = ospath.join(dirpath, file_)
                         osrename(up_path, new_path)
                         up_path = new_path
+                    __up_path = change_metadata(up_path)
+                    if __up_path:
+                        try: osremove(up_path)
+                        except: pass
+                        up_path = __up_path
                     self.__sent_msg = self.__sent_msg.reply_video(video=up_path,
                                                               quote=True,
                                                               caption=cap_mono,
@@ -126,7 +178,6 @@ class TgUploader:
                                                               progress=self.__upload_progress)
                 else:
                     notMedia = True
-
             if self.__as_doc or notMedia:
                 if file_.upper().endswith(VIDEO_SUFFIXES) and thumb is None:
                     thumb = take_ss(up_path)
@@ -142,7 +193,8 @@ class TgUploader:
                                                              disable_notification=True,
                                                              progress=self.__upload_progress)
             log_channel_id = int(environ.get("LOG_CHANNEL_ID", 0))
-            if self.__sent_msg and self.__sent_msg.media and log_channel_id:
+            fm = environ.get("FORWARD_MODE", "video").lower()
+            if self.__sent_msg and (((fm == "video") and self.__sent_msg.video) or ((fm == "document") and self.__sent_msg.document)) and log_channel_id:
                 try: self.__sent_msg.copy(chat_id=log_channel_id)
                 except Exception as e: LOGGER.error(e)
         except FloodWait as f:
