@@ -1,3 +1,5 @@
+# Leech Settings V2 Implement By - @VarnaX-279
+
 from os import remove as osremove, path as ospath, mkdir
 from threading import Thread
 from PIL import Image
@@ -50,7 +52,7 @@ def editLeechType(message, query):
 
 def leechSet(update, context):
     msg, button = getleechinfo(update.message.from_user)
-    choose_msg = sendMarkup(msg, context.bot, update.message, button)
+    choose_msg = sendMarkup(msg, context.bot, update, button)
     Thread(target=auto_delete_message, args=(context.bot, update.message, choose_msg)).start()
 
 def setLeechType(update, context):
@@ -87,8 +89,7 @@ def setLeechType(update, context):
             editLeechType(message, query)
         else:
             query.answer(text="Old Settings", show_alert=True)
-    else:
-        query.answer()
+    elif data[2] == "close":
         try:
             query.message.delete()
             query.message.reply_to_message.delete()
@@ -109,10 +110,10 @@ def setThumb(update, context):
         osremove(photo_dir)
         if DB_URI is not None:
             DbManger().user_save_thumb(user_id, des_dir)
-        msg = f"Custom thumbnail saved for {update.message.from_user.mention_html(update.message.from_user.first_name)}."
-        sendMessage(msg, context.bot, update.message)
+        msg = f"Custom thumbnail saved for <a href='tg://user?id={user_id}'>{update.message.from_user.full_name}</a>."
+        sendMessage(msg, context.bot, update)
     else:
-        sendMessage("Reply to a photo to save custom thumbnail.", context.bot, update.message)
+        sendMessage("Reply to a photo to save custom thumbnail.", context.bot, update)
 
 leech_set_handler = CommandHandler(BotCommands.LeechSetCommand, leechSet, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 set_thumbnail_handler = CommandHandler(BotCommands.SetThumbCommand, setThumb, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
