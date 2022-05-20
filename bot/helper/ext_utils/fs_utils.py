@@ -11,7 +11,7 @@ from math import ceil
 from .exceptions import NotSupportedExtractionArchive
 from bot import aria2, LOGGER, DOWNLOAD_DIR, get_client, TG_SPLIT_SIZE, EQUAL_SPLITS, STORAGE_THRESHOLD
 
-VIDEO_SUFFIXES = ("M4V", "MP4", "MOV", "FLV", "WMV", "3GP", "MPG", "WEBM", "MKV", "AVI")
+VIDEO_SUFFIXES = ("M4V", "MOV", "FLV", "WMV", "3GP", "MPG", "WEBM", "AVI")
 
 def clean_download(path: str):
     if ospath.exists(path):
@@ -85,6 +85,10 @@ def check_storage_threshold(size: int, arch=False, alloc=False):
 def get_base_name(orig_path: str):
     if orig_path.endswith(".tar.bz2"):
         return orig_path.rsplit(".tar.bz2", 1)[0]
+    elif orig_path.endswith(".mkv"):
+        return orig_path.rsplit(".mkv", 1)[0]
+    elif orig_path.endswith(".mp4"):
+        return orig_path.rsplit(".mp4", 1)[0]
     elif orig_path.endswith(".tar.gz"):
         return orig_path.rsplit(".tar.gz", 1)[0]
     elif orig_path.endswith(".bz2"):
@@ -249,4 +253,3 @@ def get_video_resolution(path):
     except Exception as e:
         LOGGER.error(f"get_video_resolution: {e}")
         return 480, 320
-
