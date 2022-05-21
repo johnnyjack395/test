@@ -128,17 +128,14 @@
         "description": "sudo id (optional).",
         "required": true
       },
-      ,
       "TORRENT_DIRECT_LIMIT": {
         "description": "Fill 250(optional).",
         "required": true
       },
-      ,
       "SUDO_USERS": {
         "description": "sudo id (optional).",
         "required": true
       },
-      ,
       "CLONE_LIMIT": {
         "description": "750 (optional).",
         "required": true
