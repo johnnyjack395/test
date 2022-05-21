@@ -152,8 +152,8 @@
         "description": "yt cookies url link.",
         "required": true
       },
-      "CLONE_LIMIT": {
-        "description": "750 (optional).",
+      "NETRC_URL": {
+        "description": "netrc url.",
         "required": true
       },
       "USE_SERVICE_ACCOUNTS": {
