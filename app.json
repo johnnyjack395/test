@@ -24,6 +24,10 @@
         "description": "Credentials json url link.",
         "required": true
       },
+      "LOG_CHANNEL_ID": {
+        "description": "Put your Dump channel id.",
+        "required": true
+      },
       "GDRIVE_FOLDER_ID": {
         "description": "This is the folder ID of the Google Drive Folder to which you want to upload all the mirrors.",
         "required": true
