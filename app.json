@@ -20,6 +20,10 @@
         "description": "The telegram bot token that you get from @BotFather.",
         "required": true
       },
+      "CREDENTIALS_JSON": {
+        "description": "Credentials json url link.",
+        "required": true
+      },
       "GDRIVE_FOLDER_ID": {
         "description": "This is the folder ID of the Google Drive Folder to which you want to upload all the mirrors.",
         "required": true
