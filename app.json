@@ -20,10 +20,6 @@
         "description": "The telegram bot token that you get from @BotFather.",
         "required": true
       },
-      "CREDENTIALS_JSON": {
-        "description": "Credentials json url link.",
-        "required": true
-      },
       "LOG_CHANNEL_ID": {
         "description": "Put your Dump channel id.",
         "required": true
